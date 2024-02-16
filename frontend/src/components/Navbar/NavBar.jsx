@@ -3,6 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import { Toolbar } from "@mui/material";
 import { Typography } from "@mui/material";
 import "./NavBar.styles.css";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   return (
@@ -10,13 +11,19 @@ const NavBar = () => {
       position="static"
       color="info"
     >
-      <Toolbar>
-        <Typography
-          variant="h6"
-          className="navbar-title"
+      <Toolbar className="navbar-title">
+        <Link
+          to="/"
+          className="navbar-link"
         >
-          Visualization
-        </Typography>
+          <Typography variant="h6">Visualization</Typography>
+        </Link>
+        <Link
+          to="/about-us"
+          className="navbar-link"
+        >
+          <Typography>About-Us</Typography>
+        </Link>
       </Toolbar>
     </AppBar>
   );

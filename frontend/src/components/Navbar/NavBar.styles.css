@@ -1,3 +1,10 @@
 .navbar-title {
   flex-grow: 1;
+  justify-content: space-between;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: inherit;
+  margin: 0 10px;
 }

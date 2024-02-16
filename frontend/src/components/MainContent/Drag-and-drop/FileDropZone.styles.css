@@ -1,0 +1,7 @@
+.dropzone {
+  border: 2px dashed #007bff;
+  padding: 20px;
+  text-align: center;
+  margin: 20px;
+  cursor: pointer;
+}

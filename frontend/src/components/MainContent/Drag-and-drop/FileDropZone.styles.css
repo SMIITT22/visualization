@@ -1,7 +1,12 @@
 .dropzone {
-  border: 2px dashed #007bff;
+  border: 2px dashed #a8b4c1;
   padding: 20px;
   text-align: center;
   margin: 20px;
   cursor: pointer;
+  border-radius: 5px;
+  margin-left: 250px;
+  margin-right: 250px;
+  line-height: 250px;
+  background-color: aliceblue;
 }

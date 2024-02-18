@@ -43,15 +43,22 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-//processing of files functionality
 const { processFiles } = require("./utils/fileProcessor");
+const { buildTree } = require("./utils/HierarchyBuilder");
 
 app.post("/upload", upload.array("files[]"), async (req, res) => {
-  const directory = path.join(__dirname, "../uploads"); // Adjust the path as necessary
+  const directory = path.join(__dirname, "../uploads");
   const componentsWithImports = await processFiles(directory);
-  res.json({
-    message: "Upload and processing completed",
-    data: componentsWithImports,
-  });
   console.log("componentsWithImports", componentsWithImports);
+
+  const rootComponentName = "index.js";
+  const tree = buildTree(rootComponentName, componentsWithImports);
+
+  // res.json({
+  //   message: "Upload and processing completed",
+  //   data: componentsWithImports,
+  // });
+  res.json({ message: "Upload and processing completed", tree });
+
+  console.log("tree", tree);
 });

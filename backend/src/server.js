@@ -37,7 +37,16 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.post("/upload", upload.array("files[]"), (req, res) => {
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+//processing of files functionality
+const { processFiles } = require("./utils/fileProcessor");
+
+app.post("/upload", upload.array("files[]"), async (req, res) => {
   const acceptedFiles = req.files.map((file) => file.originalname);
   const rejectedFiles = req.rejectedFiles || [];
 
@@ -53,9 +62,8 @@ app.post("/upload", upload.array("files[]"), (req, res) => {
     acceptedFiles: acceptedFiles,
     rejectedFiles: rejectedFiles,
   });
-});
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  const directory = path.join(__dirname, "../uploads");
+  const relationships = await processFiles(directory);
+  console.log("relationships", relationships);
 });

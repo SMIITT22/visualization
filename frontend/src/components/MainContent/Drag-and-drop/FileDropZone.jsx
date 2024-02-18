@@ -9,8 +9,10 @@ const FileDropZone = () => {
     try {
       const response = await uploadFiles(acceptedFiles);
       console.log("upload success: ", response);
+      alert(response.message);
     } catch (error) {
       console.log("error during the file upload: ", error);
+      alert(error.message);
     }
   }, []);
 

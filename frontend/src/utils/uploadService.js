@@ -12,7 +12,9 @@ export const uploadFiles = async (files) => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to upload files");
+      const errorResponse = await response.json();
+      console.log(errorResponse.message);
+      throw new Error(errorResponse.message);
     }
 
     const data = await response.json();

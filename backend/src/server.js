@@ -10,10 +10,10 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const extension = path.extname(file.originalname);
     const basename = path.basename(file.originalname, extension);
-    const newFilename = `${basename}-${uniqueSuffix}${extension}`;
+    const newFilename = `${basename}${extension}`;
+    console.log(newFilename);
     cb(null, newFilename);
   },
 });
@@ -47,23 +47,11 @@ app.listen(PORT, () => {
 const { processFiles } = require("./utils/fileProcessor");
 
 app.post("/upload", upload.array("files[]"), async (req, res) => {
-  const acceptedFiles = req.files.map((file) => file.originalname);
-  const rejectedFiles = req.rejectedFiles || [];
-
-  if (acceptedFiles.length === 0 && rejectedFiles.length > 0) {
-    return res.status(400).json({
-      message: "No valid files were uploaded.",
-      rejectedFiles: rejectedFiles,
-    });
-  }
-
+  const directory = path.join(__dirname, "../uploads"); // Adjust the path as necessary
+  const componentsWithImports = await processFiles(directory);
   res.json({
-    message: "Upload process completed",
-    acceptedFiles: acceptedFiles,
-    rejectedFiles: rejectedFiles,
+    message: "Upload and processing completed",
+    data: componentsWithImports,
   });
-
-  const directory = path.join(__dirname, "../uploads");
-  const relationships = await processFiles(directory);
-  console.log("relationships", relationships);
+  console.log("componentsWithImports", componentsWithImports);
 });

@@ -5,26 +5,19 @@ const parser = require("@babel/parser");
 async function readUploadedFiles(directory) {
   try {
     const files = await fs.readdir(directory);
-    const fileContents = await Promise.all(
-      files.map((file) => {
-        const filePath = path.join(directory, file);
-        return fs.readFile(filePath, "utf8");
-      })
-    );
-    return fileContents;
+    return files; // Ensure files is always an array
   } catch (error) {
     console.error("Error reading uploaded files:", error);
+    return [];
   }
 }
 
 function extractImports(fileContent) {
   const ast = parser.parse(fileContent, {
-    sourceType: "module", // Treat the file as an ES module
-    plugins: [
-      "jsx", // Enable JSX parsing
-      "js", // Add other plugins if needed, e.g., 'typescript' for TS files
-    ],
+    sourceType: "module",
+    plugins: ["jsx", "js"],
   });
+
   const imports = [];
   ast.program.body.forEach((node) => {
     if (node.type === "ImportDeclaration") {
@@ -35,9 +28,17 @@ function extractImports(fileContent) {
 }
 
 async function processFiles(directory) {
-  const fileContents = await readUploadedFiles(directory);
-  const relationships = fileContents.map((content) => extractImports(content));
-  return relationships;
+  const fileNames = await readUploadedFiles(directory);
+  const fileToImportsMap = {};
+
+  for (const fileName of fileNames) {
+    const filePath = path.join(directory, fileName);
+    const fileContent = await fs.readFile(filePath, "utf8");
+    const imports = extractImports(fileContent);
+    fileToImportsMap[fileName] = imports;
+  }
+
+  return fileToImportsMap;
 }
 
 module.exports = { readUploadedFiles, extractImports, processFiles };

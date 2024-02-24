@@ -49,34 +49,38 @@ app.listen(PORT, () => {
 const { processFiles } = require("./utils/fileProcessor");
 const { buildTree } = require("./utils/HierarchyBuilder");
 
-const { v4: uuidv4 } = require("uuid"); // Ensure you've installed uuid
+const { v4: uuidv4 } = require("uuid");
 
 app.post("/upload", upload.array("files[]"), async (req, res) => {
+  const hasIndexJs = req.files.some((file) => file.originalname === "index.js");
+  const isValidFileTypes = req.files.every((file) =>
+    /\.(jsx|tsx|js|ts)$/.test(file.originalname)
+  );
+
+  if (!hasIndexJs || !isValidFileTypes) {
+    // Delete the temporarily saved files
+    req.files.forEach((file) => {
+      fs.unlinkSync(file.path); // Assuming 'file.path' points to the temp location
+    });
+    return res.status(400).send({
+      message:
+        "Upload must include index.js and only .js, .jsx, .ts, or .tsx files.",
+    });
+  }
+
   const uploadSessionId = uuidv4();
   const directory = path.join(__dirname, "../uploads", uploadSessionId);
-
   try {
-    // Ensure the subfolder exists
     fs.mkdirSync(directory, { recursive: true });
-
-    // Move uploaded files into the subfolder
     req.files.forEach((file) => {
-      // Construct the path where the file will be saved
       const savePath = path.join(directory, file.originalname);
-      // Move the file from the temporary location to the save path
       fs.renameSync(file.path, savePath);
     });
 
     const componentsWithImports = await processFiles(directory);
     console.log("componentsWithImports", componentsWithImports);
-
     const rootComponentName = "index.js";
     const tree = buildTree(rootComponentName, componentsWithImports);
-
-    // res.json({
-    //   message: "Upload and processing completed",
-    //   data: componentsWithImports,
-    // });
     console.log("tree", tree);
     res.json({ message: "Upload and processing completed", tree });
   } catch (error) {

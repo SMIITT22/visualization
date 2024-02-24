@@ -38,9 +38,9 @@ const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200,
 };
-
 app.use(cors(corsOptions));
 
+//declaring port number
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -48,19 +48,18 @@ app.listen(PORT, () => {
 
 const { processFiles } = require("./utils/fileProcessor");
 const { buildTree } = require("./utils/HierarchyBuilder");
-
 const { v4: uuidv4 } = require("uuid");
 
 app.post("/upload", upload.array("files[]"), async (req, res) => {
+  // Example validation checks for index.js and .js, .jsx, .ts, .tsx files
   const hasIndexJs = req.files.some((file) => file.originalname === "index.js");
   const isValidFileTypes = req.files.every((file) =>
     /\.(jsx|tsx|js|ts)$/.test(file.originalname)
   );
 
   if (!hasIndexJs || !isValidFileTypes) {
-    // Delete the temporarily saved files
     req.files.forEach((file) => {
-      fs.unlinkSync(file.path); // Assuming 'file.path' points to the temp location
+      fs.unlinkSync(file.path);
     });
     return res.status(400).send({
       message:
@@ -68,6 +67,7 @@ app.post("/upload", upload.array("files[]"), async (req, res) => {
     });
   }
 
+  //making separate folder for each user submission
   const uploadSessionId = uuidv4();
   const directory = path.join(__dirname, "../uploads", uploadSessionId);
   try {

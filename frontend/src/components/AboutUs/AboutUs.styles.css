@@ -1,0 +1,30 @@
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-us {
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px; /* Padding inside the box */
+  margin: 20px auto; /* Centering the box with automatic horizontal margins */
+  max-width: 800px; /* Maximum width with center alignment */
+  line-height: 1.6; /* Improved readability for text */
+  animation: slideDown 0.5s ease-out forwards; /* Apply the animation */
+}
+
+.about-us-title {
+  display: flex;
+  justify-content: center;
+}
+
+.about-us-text {
+  display: flex;
+  justify-content: center;
+}

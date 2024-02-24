@@ -20,7 +20,7 @@ const NavBar = () => {
             variant="h6"
             className="navbar-mainText"
           >
-            RPV-<div className="navbar-text">React-Project-Visualization</div>
+            PV-<div className="navbar-text">React-Project-Visualization</div>
           </Typography>
         </Link>
         <Link

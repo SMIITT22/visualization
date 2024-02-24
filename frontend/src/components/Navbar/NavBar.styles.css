@@ -3,6 +3,18 @@
   justify-content: space-between;
 }
 
+.navbar-mainText {
+  font-size: large;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-text {
+  font-size: medium;
+  font-weight: 400;
+}
+
 .navbar-link {
   text-decoration: none;
   color: inherit;

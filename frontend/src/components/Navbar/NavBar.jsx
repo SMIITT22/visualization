@@ -16,13 +16,18 @@ const NavBar = () => {
           to="/"
           className="navbar-link"
         >
-          <Typography variant="h6">Visualization</Typography>
+          <Typography
+            variant="h6"
+            className="navbar-mainText"
+          >
+            RPV-<div className="navbar-text">React-Project-Visualization</div>
+          </Typography>
         </Link>
         <Link
           to="/about-us"
           className="navbar-link"
         >
-          <Typography>About-Us</Typography>
+          <Typography className="navbar-text">About-Us</Typography>
         </Link>
       </Toolbar>
     </AppBar>

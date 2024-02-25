@@ -10,11 +10,6 @@
   align-items: center;
 }
 
-.navbar-text {
-  font-size: medium;
-  font-weight: 400;
-}
-
 .navbar-link {
   text-decoration: none;
   color: inherit;

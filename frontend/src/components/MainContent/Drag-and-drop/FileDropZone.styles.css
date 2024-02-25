@@ -1,3 +1,20 @@
+.main-dropzone-body {
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px; /* Padding inside the box */
+  margin: 20px auto; /* Centering the box with automatic horizontal margins */
+  max-width: 800px; /* Maximum width with center alignment */
+  line-height: 1.6; /* Improved readability for text */
+  animation: slideDown 0.5s ease-out forwards; /* Apply the animation */
+}
+
+.dropzone-upper-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .dropzone {
   border: 2px dashed #a8b4c1;
   padding: 20px;
@@ -5,8 +22,8 @@
   margin: 20px;
   cursor: pointer;
   border-radius: 5px;
-  margin-left: 250px;
-  margin-right: 250px;
-  line-height: 250px;
+  margin-left: 100px;
+  margin-right: 100px;
+  line-height: 200px;
   background-color: aliceblue;
 }

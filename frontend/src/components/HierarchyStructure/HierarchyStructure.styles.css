@@ -1,0 +1,47 @@
+.main-structure-body {
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 100px; /* Padding inside the box */
+  margin: 50px auto; /* Centering the box with automatic horizontal margins */
+  max-width: 1000px; /* Maximum width with center alignment */
+  line-height: 1.6; /* Improved readability for text */
+  animation: slideDown 0.5s ease-out forwards; /* Apply the animation */
+  text-align: center;
+}
+
+.main-structure-empty-state {
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 100px; /* Padding inside the box */
+  margin: 50px auto; /* Centering the box with automatic horizontal margins */
+  max-width: 1000px; /* Maximum width with center alignment */
+  line-height: 1.6; /* Improved readability for text */
+  animation: slideDown 0.5s ease-out forwards; /* Apply the animation */
+}
+
+.main-structure-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Example styles */
+svg {
+  background: lightgrey;
+}
+
+.node circle {
+  fill: steelblue;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}

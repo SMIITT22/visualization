@@ -16,7 +16,6 @@ const HierarchyVisualization = () => {
       // Clear the container each time the data changes
       d3.select(d3Container.current).selectAll("*").remove();
 
-      // Setup the svg element for the graph
       const svgElement = d3
         .select(d3Container.current)
         .append("svg")
@@ -28,12 +27,45 @@ const HierarchyVisualization = () => {
             height + margin.top + margin.bottom
           }`
         )
-        .style("background", "lightgrey");
+        .style("background", "white");
+
+      // Define the pattern
+      const defs = svgElement.append("defs");
+      const pattern = defs
+        .append("pattern")
+        .attr("id", "square-grid-pattern")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("patternUnits", "userSpaceOnUse");
+
+      pattern
+        .append("line")
+        .attr("x1", 0)
+        .attr("y1", 5)
+        .attr("x2", 10)
+        .attr("y2", 5)
+        .attr("stroke", "#a8b4c1")
+        .attr("stroke-width", 1);
+
+      pattern
+        .append("line")
+        .attr("x1", 5)
+        .attr("y1", 0)
+        .attr("x2", 5)
+        .attr("y2", 10)
+        .attr("stroke", "#a8b4c1")
+        .attr("stroke-width", 1);
+
+      // Apply the pattern as the background
+      svgElement
+        .append("rect")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("fill", "url(#square-grid-pattern)");
 
       const svg = svgElement
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
       // Define the zoom behavior
       const zoom = d3
         .zoom()
@@ -75,8 +107,8 @@ const HierarchyVisualization = () => {
         .append("g")
         .attr("fill", "none")
         .attr("stroke", "#555")
-        .attr("stroke-opacity", 0.4)
-        .attr("stroke-width", 1.5)
+        .attr("stroke-opacity", 1)
+        .attr("stroke-width", 2)
         .selectAll("path")
         .data(root.links())
         .join("path")

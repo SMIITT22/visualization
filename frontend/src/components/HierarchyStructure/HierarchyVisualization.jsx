@@ -5,7 +5,6 @@ import { useTreeData } from "../../context/TreeDataContext";
 
 const HierarchyVisualization = () => {
   const { treeData } = useTreeData();
-
   const d3Container = useRef(null);
 
   useEffect(() => {
@@ -17,7 +16,8 @@ const HierarchyVisualization = () => {
       // Clear the container each time the data changes
       d3.select(d3Container.current).selectAll("*").remove();
 
-      const svg = d3
+      // Setup the svg element for the graph
+      const svgElement = d3
         .select(d3Container.current)
         .append("svg")
         .attr("width", "100%")
@@ -28,9 +28,22 @@ const HierarchyVisualization = () => {
             height + margin.top + margin.bottom
           }`
         )
-        .style("background", "lightgrey")
+        .style("background", "lightgrey");
+
+      const svg = svgElement
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // Define the zoom behavior
+      const zoom = d3
+        .zoom()
+        .scaleExtent([0.1, 10]) // Limits for zoom scale (min, max)
+        .on("zoom", (event) => {
+          svg.attr("transform", event.transform);
+        });
+
+      // Apply the zoom behavior to the svgElement
+      svgElement.call(zoom);
 
       const root = d3.hierarchy(treeData, (d) => d.children);
       root.x0 = height / 2;
@@ -64,9 +77,10 @@ const HierarchyVisualization = () => {
         .attr("stroke", "#555")
         .attr("stroke-opacity", 0.4)
         .attr("stroke-width", 1.5)
-        .selectAll()
+        .selectAll("path")
         .data(root.links())
         .join("path")
+        .attr("class", "link")
         .attr(
           "d",
           d3
@@ -75,48 +89,36 @@ const HierarchyVisualization = () => {
             .y((d) => d.x)
         );
 
-      // Drag behavior definition
+      // Drag behavior
       const drag = d3
         .drag()
         .on("start", function (event, d) {
-          // Calculate the offset on drag start
           d.offsetX = d.y - event.x;
           d.offsetY = d.x - event.y;
         })
         .on("drag", function (event, d) {
-          // Apply the offset to the new position to prevent the jump
           const newX = event.y + d.offsetY;
           const newY = event.x + d.offsetX;
-
-          // Update the node's position
           d3.select(this).attr("transform", `translate(${newY},${newX})`);
           d.x = newX;
           d.y = newY;
-
-          // Update links
-          updateLinks();
+          updateLinks(); // Function to update the links' positions
         })
         .on("end", function (event, d) {
-          // Remove the offset properties if you don't need them anymore
           delete d.offsetX;
           delete d.offsetY;
         });
 
-      // Apply drag behavior to nodes
       nodes.call(drag);
 
-      // Function to update links
       function updateLinks() {
-        link
-          .data(root.links())
-          .join("path")
-          .attr(
-            "d",
-            d3
-              .linkHorizontal()
-              .x((d) => d.y)
-              .y((d) => d.x)
-          );
+        link.attr(
+          "d",
+          d3
+            .linkHorizontal()
+            .x((d) => d.y)
+            .y((d) => d.x)
+        );
       }
     }
   }, [treeData]); // Redraw tree when data changes

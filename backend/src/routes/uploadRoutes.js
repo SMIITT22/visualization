@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../config/multerConfig"); // Adjust this path as necessary
+const upload = require("../config/multerConfig");
 const fs = require("fs");
 const path = require("path");
 const { processFiles } = require("../utils/fileProcessor");
@@ -8,7 +8,9 @@ const { buildTree } = require("../utils/HierarchyBuilder");
 const { v4: uuidv4 } = require("uuid");
 
 router.post("/", upload.array("files[]"), async (req, res) => {
-  // Example validation checks for index.js and .js, .jsx, .ts, .tsx files
+  /** validation checks after multer stores
+   *  files(look it for multerConfig.js) and then we check here for index.js
+   *  and .js, .jsx, .ts, .tsx files. **/
   const hasIndexJs = req.files.some((file) => file.originalname === "index.js");
   const isValidFileTypes = req.files.every((file) =>
     /\.(jsx|tsx|js|ts)$/.test(file.originalname)

@@ -10,8 +10,8 @@ const HierarchyVisualization = () => {
   useEffect(() => {
     if (treeData && d3Container.current) {
       const margin = { top: 20, right: 90, bottom: 30, left: 90 },
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 1960 - margin.left - margin.right,
+        height = 1500 - margin.top - margin.bottom;
 
       // Clear the container each time the data changes
       d3.select(d3Container.current).selectAll("*").remove();

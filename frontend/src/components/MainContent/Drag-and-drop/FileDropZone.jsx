@@ -3,14 +3,33 @@ import "./FileDropZone.styles.css";
 import { useDropzone } from "react-dropzone";
 import { uploadFiles } from "../../../utils/uploadService";
 import { useTreeData } from "../../../context/TreeDataContext";
+
 const FileDropZone = () => {
   const { updateTreeData } = useTreeData();
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
       console.log("what we are uploading", acceptedFiles);
+
+      // Check if all files are within the 'src' directory
+      const allFilesInSrc = acceptedFiles.every((file) =>
+        file.path.includes("/src/")
+      );
+
+      if (!allFilesInSrc) {
+        alert(
+          "Please make sure all files are from the 'src' directory of your project."
+        );
+        return; // Exit the function if not all files are from 'src'
+      }
+
+      // Proceed with files only from the 'src' directory
+      const filteredFiles = acceptedFiles.filter(
+        (file) => !file.path.includes("/node_modules/")
+      );
+
       try {
-        const response = await uploadFiles(acceptedFiles);
+        const response = await uploadFiles(filteredFiles);
         updateTreeData(response.tree);
         console.log("upload success: ", response.tree);
         alert(response.message);
@@ -26,6 +45,7 @@ const FileDropZone = () => {
     onDrop,
     noKeyboard: true,
   });
+
   return (
     <div className="main-dropzone-body">
       <div className="dropzone-upper-text">
@@ -38,10 +58,7 @@ const FileDropZone = () => {
           </strong>
         </p>
       </div>
-      <div
-        {...getRootProps()}
-        className="dropzone"
-      >
+      <div {...getRootProps()} className="dropzone">
         <input {...getInputProps()} />
         <p>FileDropZone</p>
       </div>

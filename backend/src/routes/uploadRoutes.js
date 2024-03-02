@@ -29,18 +29,35 @@ router.post("/", upload.array("files[]"), async (req, res) => {
   //making separate folder for each user submission
   const uploadSessionId = uuidv4();
   const directory = path.join(__dirname, "../../uploads", uploadSessionId);
-  try {
+  // Ensure the directory exists
+  if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory, { recursive: true });
-    req.files.forEach((file) => {
+  }
+  // Move each file to the new directory asynchronously and handle errors
+  const moveFilePromises = req.files.map((file) => {
+    return new Promise((resolve, reject) => {
       const savePath = path.join(directory, file.originalname);
-      fs.renameSync(file.path, savePath);
+      fs.rename(file.path, savePath, (err) => {
+        if (err) {
+          console.error("Error moving file:", file.originalname, err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
     });
+  });
 
+  try {
+    // Wait for all files to be moved
+    await Promise.all(moveFilePromises);
+    // Process files after moving them (optional)
     const componentsWithImports = await processFiles(directory);
     console.log("componentsWithImports", componentsWithImports);
     const rootComponentName = "index.js";
     const tree = buildTree(rootComponentName, componentsWithImports);
     console.log("tree", tree);
+    // Respond to the client
     res.json({ message: "Upload and processing completed", tree });
   } catch (error) {
     console.error("Error handling upload from server:", error);

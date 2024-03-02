@@ -1,9 +1,10 @@
-export const uploadFiles = async (files) => {
+export const uploadFiles = async (files, rootComponentName) => {
   const formData = new FormData();
 
   files.forEach((file) => {
     formData.append("files[]", file);
   });
+  formData.append("rootComponentName", rootComponentName);
 
   try {
     const response = await fetch("http://localhost:3001/upload", {

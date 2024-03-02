@@ -15,7 +15,7 @@ async function readUploadedFiles(directory) {
 function extractImports(fileContent) {
   const ast = parser.parse(fileContent, {
     sourceType: "module",
-    plugins: ["jsx", "js"],
+    plugins: ["jsx", "classProperties"],
   });
 
   const imports = [];
@@ -33,11 +33,16 @@ async function processFiles(directory) {
 
   for (const fileName of fileNames) {
     const filePath = path.join(directory, fileName);
+    console.log(`Processing file: ${filePath}`);
     const fileContent = await fs.readFile(filePath, "utf8");
-    const imports = extractImports(fileContent);
-    fileToImportsMap[fileName] = imports;
-  }
 
+    try {
+      const imports = extractImports(fileContent);
+      fileToImportsMap[fileName] = imports;
+    } catch (error) {
+      console.error(`Error processing file ${fileName}:`, error);
+    }
+  }
   return fileToImportsMap;
 }
 

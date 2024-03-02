@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import "./FileDropZone.styles.css";
 import { useDropzone } from "react-dropzone";
 import { uploadFiles } from "../../../utils/uploadService";
@@ -6,11 +6,15 @@ import { useTreeData } from "../../../context/TreeDataContext";
 
 const FileDropZone = () => {
   const { updateTreeData } = useTreeData();
+  const [rootComponentName, setRootComponentName] = useState("");
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
       console.log("what we are uploading", acceptedFiles);
-
+      const rootName = prompt(
+        "Enter the root component file name, e.g., App.js:"
+      );
+      setRootComponentName(rootName);
       // Check if all files are within the 'src' directory
       const allFilesInSrc = acceptedFiles.every((file) =>
         file.path.includes("/src/")
@@ -29,7 +33,7 @@ const FileDropZone = () => {
       );
 
       try {
-        const response = await uploadFiles(filteredFiles);
+        const response = await uploadFiles(filteredFiles, rootName);
         updateTreeData(response.tree);
         console.log("upload success: ", response.tree);
         alert(response.message);

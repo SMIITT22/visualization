@@ -2,20 +2,24 @@ const fs = require("fs").promises;
 const path = require("path");
 const parser = require("@babel/parser");
 
-async function readUploadedFiles(directory) {
-  try {
-    const files = await fs.readdir(directory);
-    return files; // Ensure files is always an array
-  } catch (error) {
-    console.error("Error reading uploaded files:", error);
-    return [];
+// Updated to handle recursive directory processing
+async function readUploadedFiles(directory, fileList = []) {
+  const dirents = await fs.readdir(directory, { withFileTypes: true });
+  for (const dirent of dirents) {
+    const resPath = path.resolve(directory, dirent.name);
+    if (dirent.isDirectory()) {
+      await readUploadedFiles(resPath, fileList);
+    } else {
+      fileList.push(resPath);
+    }
   }
+  return fileList;
 }
 
 function extractImports(fileContent) {
   const ast = parser.parse(fileContent, {
     sourceType: "module",
-    plugins: ["jsx", "classProperties"],
+    plugins: ["jsx", "typescript"], // Adjust as needed
   });
 
   const imports = [];
@@ -28,22 +32,29 @@ function extractImports(fileContent) {
 }
 
 async function processFiles(directory) {
-  const fileNames = await readUploadedFiles(directory);
+  console.log(`Processing directory: ${directory}`);
+  const filePaths = await readUploadedFiles(directory);
+  console.log(`Found files: ${filePaths.join(", ")}`);
+
   const fileToImportsMap = {};
 
-  for (const fileName of fileNames) {
-    const filePath = path.join(directory, fileName);
-    console.log(`Processing file: ${filePath}`);
-    const fileContent = await fs.readFile(filePath, "utf8");
-
+  for (const filePath of filePaths) {
+    console.log(`Reading file: ${filePath}`);
     try {
+      const fileContent = await fs.readFile(filePath, "utf8");
+      console.log(`File content: ${fileContent.slice(0, 100)}...`); // Log the first 100 characters
       const imports = extractImports(fileContent);
-      fileToImportsMap[fileName] = imports;
+      console.log(`Imports found: ${imports.join(", ")}`);
+      // Store imports using relative paths for easier reference
+      const relativePath = path.relative(directory, filePath);
+      fileToImportsMap[relativePath] = imports;
     } catch (error) {
-      console.error(`Error processing file ${fileName}:`, error);
+      console.error(`Error processing file ${filePath}:`, error);
     }
   }
+
+  console.log("Components with imports:", fileToImportsMap);
   return fileToImportsMap;
 }
 
-module.exports = { readUploadedFiles, extractImports, processFiles };
+module.exports = { processFiles };

@@ -1,11 +1,5 @@
-export const uploadFiles = async (files, rootComponentName) => {
-  const formData = new FormData();
-
-  files.forEach((file) => {
-    formData.append("files[]", file);
-  });
-  formData.append("rootComponentName", rootComponentName);
-
+// Assuming uploadService.js is where you manage API calls
+export const uploadZip = async (formData) => {
   try {
     const response = await fetch("http://localhost:3001/upload", {
       method: "POST",
@@ -13,15 +7,15 @@ export const uploadFiles = async (files, rootComponentName) => {
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json();
-      console.log(errorResponse.message);
-      throw new Error(errorResponse.message);
+      throw new Error("Failed to upload zip file");
     }
 
+    // return await response.json();
     const data = await response.json();
+    console.log(data);
     return data;
   } catch (error) {
-    console.error("Error uploading files:", error);
+    console.error("Error uploading zip file:", error);
     throw error;
   }
 };

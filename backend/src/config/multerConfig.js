@@ -1,3 +1,4 @@
+// multerConfig.js adjustments
 const multer = require("multer");
 const path = require("path");
 
@@ -7,22 +8,18 @@ const storage = multer.diskStorage({
     cb(null, uploadsDir);
   },
   filename: function (req, file, cb) {
-    const extension = path.extname(file.originalname);
-    const basename = path.basename(file.originalname, extension);
-    const newFilename = `${basename}${extension}`;
-    cb(null, newFilename);
+    cb(null, file.originalname);
   },
 });
 
 const fileFilter = (req, file, cb) => {
-  if (/\.(jsx|tsx|js|ts)$/.test(file.originalname)) {
+  if (
+    file.mimetype === "application/zip" ||
+    file.mimetype === "application/x-zip-compressed"
+  ) {
     cb(null, true);
   } else {
-    if (!req.rejectedFiles) {
-      req.rejectedFiles = [];
-    }
-    req.rejectedFiles.push(file.originalname);
-    cb(null, false);
+    cb(new Error("Only .zip files are allowed!"), false);
   }
 };
 

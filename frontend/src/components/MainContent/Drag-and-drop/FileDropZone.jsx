@@ -1,44 +1,24 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import "./FileDropZone.styles.css";
 import { useDropzone } from "react-dropzone";
-import { uploadFiles } from "../../../utils/uploadService";
+import { uploadZip } from "../../../utils/uploadService"; // This function needs to be implemented
 import { useTreeData } from "../../../context/TreeDataContext";
 
 const FileDropZone = () => {
   const { updateTreeData } = useTreeData();
-  const [rootComponentName, setRootComponentName] = useState("");
 
   const onDrop = useCallback(
-    async (acceptedFiles) => {
-      console.log("what we are uploading", acceptedFiles);
-      const rootName = prompt(
-        "Enter the root component file name, e.g., App.js:"
-      );
-      setRootComponentName(rootName);
-      // Check if all files are within the 'src' directory
-      const allFilesInSrc = acceptedFiles.every((file) =>
-        file.path.includes("/src/")
-      );
-
-      if (!allFilesInSrc) {
-        alert(
-          "Please make sure all files are from the 'src' directory of your project."
-        );
-        return; // Exit the function if not all files are from 'src'
-      }
-
-      // Proceed with files only from the 'src' directory
-      const filteredFiles = acceptedFiles.filter(
-        (file) => !file.path.includes("/node_modules/")
-      );
-
+    async ([zipFile]) => {
+      // Expecting a single zip file
       try {
-        const response = await uploadFiles(filteredFiles, rootName);
+        const formData = new FormData();
+        formData.append("srcZip", zipFile); // Ensure this matches the backend field name
+
+        const response = await uploadZip(formData); // Implement this function to send the formData
         updateTreeData(response.tree);
-        console.log("upload success: ", response.tree);
         alert(response.message);
       } catch (error) {
-        console.log("error during the file upload: ", error);
+        console.error("error during the file upload: ", error);
         alert(error.message);
       }
     },
@@ -48,6 +28,8 @@ const FileDropZone = () => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     noKeyboard: true,
+    multiple: false, // Ensure only a single file can be uploaded
+    accept: "application/zip", // Correct MIME type for zip files
   });
 
   return (
@@ -64,7 +46,9 @@ const FileDropZone = () => {
       </div>
       <div {...getRootProps()} className="dropzone">
         <input {...getInputProps()} />
-        <p>FileDropZone</p>
+        <p>
+          Drag 'n' drop your project zip file here, or click to select the file
+        </p>
       </div>
     </div>
   );

@@ -16,14 +16,11 @@ router.post("/", upload.single("srcZip"), async (req, res) => {
     uploadSessionId
   );
 
-  // Ensure the extraction directory exists
   if (!fs.existsSync(extractionDirectory)) {
     fs.mkdirSync(extractionDirectory, { recursive: true });
   }
 
   try {
-    // Extract the zip file
-    // Inside the POST handler
     const zip = new AdmZip(req.file.path);
     const uploadSessionId = uuidv4();
     const extractionDirectory = path.join(
@@ -33,15 +30,10 @@ router.post("/", upload.single("srcZip"), async (req, res) => {
       "src"
     );
     zip.extractAllTo(extractionDirectory, true);
-    // Proceed with file processing and tree building here
-
-    // Adjust the path to specifically target the src directory
     const srcDirectory = path.join(extractionDirectory, "src");
-
-    // After extraction, process the files within the src directory
     const componentsWithImports = await processFiles(srcDirectory);
     console.log("componentsWithImports", componentsWithImports);
-    const rootComponentName = "index.js"; // Adjust if necessary to match your root component file
+    const rootComponentName = "index.js";
     const tree = buildTree(rootComponentName, componentsWithImports);
     console.log("tree", tree);
 

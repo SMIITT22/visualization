@@ -22,15 +22,15 @@ router.post("/", upload.single("srcZip"), async (req, res) => {
 
   try {
     const zip = new AdmZip(req.file.path);
-    const uploadSessionId = uuidv4();
-    const extractionDirectory = path.join(
-      __dirname,
-      "../../uploads",
-      uploadSessionId,
-      "src"
-    );
     zip.extractAllTo(extractionDirectory, true);
     const srcDirectory = path.join(extractionDirectory, "src");
+    if (!fs.existsSync(srcDirectory)) {
+      console.error("No 'src' directory found within the uploaded zip.");
+      return res.status(400).send({
+        message: "Invalid zip structure. Expected a 'src' directory.",
+      });
+    }
+
     const componentsWithImports = await processFiles(srcDirectory);
     console.log("componentsWithImports", componentsWithImports);
     const rootComponentName = "index.js";

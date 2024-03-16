@@ -20,6 +20,7 @@ router.post("/", upload.single("srcZip"), async (req, res) => {
     fs.mkdirSync(extractionDirectory, { recursive: true });
   }
 
+  let treeGeneratedSuccessfully = false;
   try {
     const zip = new AdmZip(req.file.path);
     zip.extractAllTo(extractionDirectory, true);
@@ -36,11 +37,34 @@ router.post("/", upload.single("srcZip"), async (req, res) => {
     const rootComponentName = "index.js";
     const tree = buildTree(rootComponentName, componentsWithImports);
     console.log("tree", tree);
-
-    res.json({ message: "Upload and processing completed", tree });
+    if (tree !== null && tree !== undefined) {
+      treeGeneratedSuccessfully = true;
+      res.json({ message: "Upload and processing completed", tree });
+    } else {
+      throw new Error("Failed to generate tree structure");
+    }
   } catch (error) {
     console.error("Error handling upload from server:", error);
     res.status(500).send({ message: "Failed to extract and process files" });
+
+    if (error.message === "Failed to generate tree structure") {
+      res
+        .status(500)
+        .send({ alert: "Tree generation failed. Please try again." });
+      treeGeneratedSuccessfully = true;
+    }
+  } finally {
+    if (treeGeneratedSuccessfully) {
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error(`Error deleting zip file: ${err}`);
+        else console.log(`${req.file.path} was deleted`);
+      });
+
+      fs.rm(extractionDirectory, { recursive: true }, (err) => {
+        if (err) console.error(`Error deleting extracted directory: ${err}`);
+        else console.log(`${extractionDirectory} was deleted`);
+      });
+    }
   }
 });
 

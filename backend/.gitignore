@@ -2,6 +2,7 @@
 
 #files
 /uploads/*
+/.env
 
 # dependencies
 /node_modules

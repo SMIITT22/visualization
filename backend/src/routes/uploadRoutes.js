@@ -7,6 +7,7 @@ const { processFiles } = require("../utils/fileProcessor");
 const { buildTree } = require("../utils/HierarchyBuilder");
 const AdmZip = require("adm-zip");
 const { v4: uuidv4 } = require("uuid");
+const { TreeNode, TreeRoot } = require("../models/TreeModel"); // Adjust the path as necessary
 
 router.post("/", upload.single("srcZip"), async (req, res) => {
   const uploadSessionId = uuidv4();
@@ -38,6 +39,9 @@ router.post("/", upload.single("srcZip"), async (req, res) => {
     const tree = buildTree(rootComponentName, componentsWithImports);
     console.log("tree", tree);
     if (tree !== null && tree !== undefined) {
+      const treeDocument = new TreeRoot(tree);
+      await treeDocument.save();
+
       treeGeneratedSuccessfully = true;
       res.json({ message: "Upload and processing completed", tree });
     } else {

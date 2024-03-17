@@ -3,16 +3,38 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: 20px auto;
-  max-width: 800px;
   line-height: 1.6;
   animation: slideDown 0.5s ease-out forwards;
   margin-left: 20px;
+  height: 250px;
+  width: 250px;
+  overflow-y: auto;
 }
 
 .tree-list-innercontainer {
+  display: grid;
+  justify-items: center;
   border-radius: 5px;
   margin: 0 auto; /* Center the container */
   padding: 20px;
+}
+
+.delete-icon {
+  margin-left: auto; /* Push it to the end */
+  color: #666; /* Initial color */
+}
+.delete-icon:hover {
+  color: #d33; /* Color change on hover */
+}
+
+.project-name {
+  flex-grow: 1; /* Make project name take up available space */
+}
+
+/* New hover effect for project name */
+.project-name:hover {
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 ul {
@@ -26,21 +48,6 @@ li {
   margin: 10px 0; /* Space out list items */
   display: flex;
   align-items: center; /* Align icon and text */
-}
-
-li:hover {
-  background-color: #f0f0f0; /* Color change on hover */
-  cursor: pointer;
-  border-radius: 5px; /* Rounded corners on hover */
-}
-
-.project-index {
-  margin-right: 10px; /* Space between the number and icon */
-}
-
-.file-icon {
-  margin-right: 10px; /* Space between the icon and project name */
-  color: #666; /* Icon color */
 }
 
 /* Add keyframes for slideDown animation */

@@ -1,0 +1,22 @@
+.tree-list-body {
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px; /* Padding inside the box */
+  margin: 20px auto; /* Centering the box with automatic horizontal margins */
+  max-width: 800px; /* Maximum width with center alignment */
+  line-height: 1.6; /* Improved readability for text */
+  animation: slideDown 0.5s ease-out forwards; /* Apply the animation */
+  margin-left: 20px; /* Add a gap from the left side */
+}
+
+.tree-list-innercontainer {
+  padding: 20px;
+  text-align: center;
+  margin: 20px;
+  border-radius: 5px;
+  margin-left: 100px;
+  margin-right: 100px;
+  line-height: 200px;
+  width: 200px;
+  height: 200px;
+}

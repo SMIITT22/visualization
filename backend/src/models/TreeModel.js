@@ -1,21 +1,24 @@
 const mongoose = require("mongoose");
 
 const treeSchema = new mongoose.Schema({
-  name: String,
-  children: [
-    {
-      // Define children as a nested schema to match the tree structure
-      name: String,
-      children: [
-        {
-          type: mongoose.Schema.Types.Mixed, // Allows for nested objects
-        },
-      ],
-    },
-  ],
+  projectName: String, // New field for project name
+  rootComponent: String, // New field for root component name
+  tree: {
+    // Assuming the existing tree structure is encapsulated in a 'tree' field
+    name: String,
+    children: [
+      {
+        name: String,
+        children: [
+          {
+            type: mongoose.Schema.Types.Mixed, // Allows for nested objects
+          },
+        ],
+      },
+    ],
+  },
 });
 
-const TreeNode = mongoose.model("TreeNode", treeSchema);
-const TreeRoot = mongoose.model("TreeRoot", treeSchema);
+const TreeProject = mongoose.model("TreeProject", treeSchema);
 
-module.exports = { TreeNode, TreeRoot };
+module.exports = TreeProject;

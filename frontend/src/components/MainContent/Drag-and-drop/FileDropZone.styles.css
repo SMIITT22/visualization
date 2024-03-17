@@ -28,7 +28,7 @@
   background-color: aliceblue;
 }
 .dropzone:hover {
-  background-color: #a0cfe8; /* Dark blue background on hover */
-  color: white; /* Change text color to white for better readability */
+  background-color: #a0cfe8;
+  color: white;
   border: 2px dashed #a8b4c1;
 }

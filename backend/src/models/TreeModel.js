@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
 const treeSchema = new mongoose.Schema({
-  projectName: String, // New field for project name
-  rootComponent: String, // New field for root component name
+  projectName: String,
+  rootComponent: String,
   tree: {
-    // Assuming the existing tree structure is encapsulated in a 'tree' field
     name: String,
     children: [
       {

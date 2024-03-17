@@ -40,7 +40,6 @@ router.post("/", upload.single("srcZip"), async (req, res) => {
 
     const componentsWithImports = await processFiles(srcDirectory);
     console.log("componentsWithImports", componentsWithImports);
-    const rootComponentNameold = "index.js";
     const tree = buildTree(rootComponent, componentsWithImports);
     console.log("tree", tree);
     if (tree !== null && tree !== undefined) {

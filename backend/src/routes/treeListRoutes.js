@@ -18,7 +18,7 @@ router.get("/projects/:projectId/tree", async (req, res) => {
     const project = await TreeProject.findById(projectId);
     res.json(project);
   } catch (error) {
-    console.error("Error fetching project tree data:", error);
+    console.error("Error fetching project tree data(projectId):", error);
     res.status(500).send({ message: "Failed to fetch project tree data" });
   }
 });

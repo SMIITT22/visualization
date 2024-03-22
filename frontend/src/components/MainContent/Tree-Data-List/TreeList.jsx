@@ -16,22 +16,23 @@ function TreeList() {
     try {
       const response = await fetch("http://localhost:3001/projects");
       const data = await response.json();
+      console.log("fetchProjects", data);
       setProjects(data);
     } catch (error) {
-      console.error("Error fetching projects:", error);
+      console.error("Error While fetching projects:", error);
     }
   };
 
   const handleProjectClick = async (projectId) => {
-    console.log("clicked");
     try {
       // Fetch the project's tree data by projectId
       const response = await fetch(
         `http://localhost:3001/projects/${projectId}/tree`
       );
       const treeData = await response.json();
-      console.log("clicked", treeData);
+      console.log("handleProjectClick", treeData);
       updateTreeData(treeData.tree);
+      localStorage.setItem("selectedProjectId", projectId);
     } catch (error) {
       console.error("Error fetching tree data:", error);
     }
@@ -47,9 +48,21 @@ function TreeList() {
         }
       );
       if (!response.ok) throw new Error("Failed to delete the project");
-      fetchProjects(); // Refresh the list after deletion
+      // Successfully deleted the project, now update the local state
+      setProjects((prevProjects) =>
+        prevProjects.filter((project) => project._id !== projectId)
+      );
+
+      // Check if the deleted project is the one currently selected
+      const selectedProjectId = localStorage.getItem("selectedProjectId");
+      if (projectId === selectedProjectId) {
+        // Clear selected project data from local storage and application state
+        localStorage.removeItem("selectedProjectId");
+        updateTreeData(null); // Assuming passing null clears the displayed data
+      }
     } catch (error) {
       console.error("Error deleting project:", error);
+      alert("Error deleting project.");
     }
   };
   return (

@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 const parser = require("@babel/parser");
+const { shouldIgnoreImport } = require("./filterComponentImports");
 
 async function readUploadedFiles(directory, fileList = []) {
   const dirents = await fs.readdir(directory, { withFileTypes: true });
@@ -41,7 +42,10 @@ function extractImports(fileContent) {
 
   const imports = [];
   ast.program.body.forEach((node) => {
-    if (node.type === "ImportDeclaration") {
+    if (
+      node.type === "ImportDeclaration" &&
+      !shouldIgnoreImport(node.source.value)
+    ) {
       imports.push(node.source.value);
     }
   });

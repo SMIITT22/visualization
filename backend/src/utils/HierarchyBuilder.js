@@ -36,7 +36,7 @@ function buildTree(
   if (visited.has(rootName)) return null;
   visited.add(rootName);
 
-  const rootNode = createNode(rootName);
+  const rootNode = createNode(path.basename(rootName));
   const dependencies = componentsWithImports[rootName] || [];
 
   dependencies.forEach((dep) => {
@@ -53,7 +53,7 @@ function buildTree(
       }
     } else if (!visited.has(dep)) {
       // Handle unresolved dependencies as leaf nodes
-      rootNode.children.push(createNode(dep));
+      rootNode.children.push(createNode(path.basename(dep)));
     }
   });
 

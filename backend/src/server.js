@@ -23,6 +23,6 @@ mongoose
   })
   .then(() => {
     console.log("MongoDB connected successfully");
-    app.listen(dbPORT, () => console.log(`App listening on port ${dbPORT}!`));
+    app.listen(dbPORT, () => console.log(`database listening on port ${dbPORT}!`));
   })
   .catch((err) => console.error("MongoDB connection error:", err));

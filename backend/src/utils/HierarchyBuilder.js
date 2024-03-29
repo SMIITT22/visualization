@@ -36,7 +36,8 @@ function buildTree(
   if (visited.has(rootName)) return null;
   visited.add(rootName);
 
-  const rootNode = createNode(rootName);
+  const nodeName = path.basename(rootName);
+  const rootNode = createNode(nodeName);
   const dependencies = componentsWithImports[rootName] || [];
 
   dependencies.forEach((dep) => {

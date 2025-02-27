@@ -10,7 +10,6 @@ This is a web application designed to help developers visualize the parent-child
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 The React Component Visualizer is a tool for developers working with React. By uploading a project's `src` folder, users can see a clear, interactive visualization of how components are connected as parents and children. The frontend leverages React and Chart.js for rendering, styled with Material-UI, while the backend processes the uploaded files and stores data in PostgreSQL.
@@ -111,6 +110,5 @@ Contributions are welcome! Please follow these steps:
    git push origin feature-branch
    ```
 5. **Open a pull request.**
-
 ---
 Happy Coding! 🚀

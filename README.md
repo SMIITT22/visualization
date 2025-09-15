@@ -74,7 +74,7 @@ npm run dev
 ```
 
 ### 5. Set Up the Frontend
-Navigate to the frontend folder (if applicable):
+Navigate to the frontend folder:
 ```bash
 npm install
 ```
@@ -109,6 +109,4 @@ Contributions are welcome! Please follow these steps:
    ```bash
    git push origin feature-branch
    ```
-5. **Open a pull request.**
----
-Happy Coding! 🚀
+
